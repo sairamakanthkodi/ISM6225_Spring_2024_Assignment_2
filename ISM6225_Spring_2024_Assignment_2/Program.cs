@@ -28,8 +28,8 @@ namespace ISM6225_Spring_2024_Assignment_2
             Console.WriteLine(combinationsString);
 
             //Question 3:
-            Console.WriteLine("Question 3:");
-            int[] nums3 = { -1, 0, 1, 2, -1, -4 };
+            Console.WriteLine("Question 3:");    
+            int[] nums3 = { 0, 0, 0 };
             IList<IList<int>> triplets = ThreeSum(nums3);
             string tripletResult = ConvertIListToNestedList(triplets);
             Console.WriteLine(tripletResult);
@@ -100,7 +100,17 @@ namespace ISM6225_Spring_2024_Assignment_2
             try
             {
                 // Write your code here and you can modify the return value according to the requirements
-                return 0;
+                if (nums.Length == 0) return 0;
+                int i = 0;
+                for (int j = 1; j < nums.Length; j++)
+                {
+                    if (nums[j] != nums[i])
+                    {
+                        i++;
+                        nums[i] = nums[j];
+                    }
+                }
+                return i + 1;
             }
             catch (Exception)
             {
@@ -135,11 +145,20 @@ namespace ISM6225_Spring_2024_Assignment_2
             try
             {
                 // Write your code here and you can modify the return value according to the requirements
-                return new List<int>();
+                int moveZeroesLast = 0;
+                foreach (var num in nums)
+                {
+                    if (num != 0) nums[moveZeroesLast++] = num;
+                }
+                while (moveZeroesLast < nums.Length)
+                {
+                    nums[moveZeroesLast++] = 0;
+                }
+                return nums.ToList();
             }
             catch (Exception)
             {
-                throw;
+                throw ;
             }
         }
 
@@ -186,7 +205,37 @@ namespace ISM6225_Spring_2024_Assignment_2
             try
             {
                 // Write your code here and you can modify the return value according to the requirements
-                return new List<IList<int>>();
+                Array.Sort(nums);
+                List<IList<int>> res = new List<IList<int>>();
+
+                for (int i = 0; i < nums.Length - 2; i++)
+                {
+                    if (i > 0 && nums[i] == nums[i - 1]) continue; // Skip duplicate 'a' values
+
+                    int left = i + 1, right = nums.Length - 1;
+                    while (left < right)
+                    {
+                        int sum = nums[i] + nums[left] + nums[right];
+                        if (sum == 0)
+                        {
+                            res.Add(new List<int> { nums[i], nums[left], nums[right] });
+                            while (left < right && nums[left] == nums[left + 1]) left++; // Skiping duplicate 'b' values
+                            while (left < right && nums[right] == nums[right - 1]) right--; // Skiping duplicate 'c' values
+                            left++;
+                            right--;
+                        }
+                        else if (sum < 0)
+                        {
+                            left++; // Moving left pointer to increase sum
+                        }
+                        else
+                        {
+                            right--; // Moving right pointer to decrease sum
+                        }
+                    }
+                }
+
+                return res;
             }
             catch (Exception)
             {
@@ -221,7 +270,14 @@ namespace ISM6225_Spring_2024_Assignment_2
             try
             {
                 // Write your code here and you can modify the return value according to the requirements
-                return 0;
+                int max = 0, count = 0;
+                foreach (int num in nums)
+                {
+                    if (num == 1) count++;
+                    else count = 0;
+                    if (count > max) max = count;
+                }
+                return max;
             }
             catch (Exception)
             {
@@ -257,7 +313,15 @@ namespace ISM6225_Spring_2024_Assignment_2
             try
             {
                 // Write your code here and you can modify the return value according to the requirements
-                return 0;
+                int decimalValue = 0, baseValue = 1;
+                while (binary > 0)
+                {
+                    int lastDigit = binary % 10;
+                    binary = binary / 10;
+                    decimalValue += lastDigit * baseValue;
+                    baseValue = baseValue * 2;
+                }
+                return decimalValue;
             }
             catch (Exception)
             {
@@ -295,7 +359,14 @@ namespace ISM6225_Spring_2024_Assignment_2
             try
             {
                 // Write your code here and you can modify the return value according to the requirements
-                return 0;
+                if (nums.Length < 2) return 0;
+                Array.Sort(nums);
+                int maximumGap = 0;
+                for (int i = 1; i < nums.Length; i++)
+                {
+                    maximumGap = Math.Max(maximumGap, nums[i] - nums[i - 1]);
+                }
+                return maximumGap;
             }
             catch (Exception)
             {
@@ -335,6 +406,10 @@ namespace ISM6225_Spring_2024_Assignment_2
             try
             {
                 // Write your code here and you can modify the return value according to the requirements
+                Array.Sort(nums);
+                for (int i = nums.Length - 3; i >= 0; i--)
+                    if (nums[i] + nums[i + 1] > nums[i + 2])
+                        return nums[i] + nums[i + 1] + nums[i + 2];
                 return 0;
             }
             catch (Exception)
@@ -389,7 +464,13 @@ namespace ISM6225_Spring_2024_Assignment_2
             try
             {
                 // Write your code here and you can modify the return value according to the requirements
-                return "";
+                StringBuilder sb = new StringBuilder(s);
+                while (sb.ToString().Contains(part))
+                {
+                    int index = sb.ToString().IndexOf(part);
+                    sb.Remove(index, part.Length);
+                }
+                return sb.ToString();
             }
             catch (Exception)
             {
